@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Econ@Furman</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #582C83;
+    --purple-dark: #3e1f60;
+    --purple-light: #7a4aaa;
+    --purple-pale: #f0e8f8;
+    --gold: #C9A84C;
+    --gold-light: #e8c96d;
+    --gold-pale: #fdf6e3;
+    --white: #ffffff;
+    --gray-light: #f7f5fb;
+    --gray: #6b6b6b;
+    --text: #1a1a2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ====== NAV ====== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--purple);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    box-shadow: 0 2px 20px rgba(88,44,131,0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--white);
+    cursor: pointer; text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; align-items: center; gap: 8px; }
+  .nav-links a {
+    color: rgba(255,255,255,0.88);
+    text-decoration: none;
+    font-size: 0.95rem; font-weight: 500;
+    padding: 8px 16px; border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+  .nav-links a.active { color: var(--white); background: rgba(255,255,255,0.15); }
+  .nav-cta {
+    background: var(--gold) !important;
+    color: var(--purple-dark) !important;
+    font-weight: 600 !important;
+    padding: 9px 20px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(201,168,76,0.4) !important; }
+
+  /* ====== PAGES ====== */
+  .page { display: none; padding-top: 64px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ====== HOME PAGE ====== */
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 50%, var(--purple-light) 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 40px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 50%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 700px; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900;
+    color: var(--white); line-height: 1.1; margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 1.3rem; color: rgba(255,255,255,0.8);
+    font-weight: 300; letter-spacing: 0.05em;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 0.1em;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .scroll-arrow { width: 20px; height: 20px; border-right: 2px solid rgba(255,255,255,0.4); border-bottom: 2px solid rgba(255,255,255,0.4); transform: rotate(45deg); animation: bounce 1.5s infinite; }
+  @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(5px)} }
+
+  /* About box */
+  .section { padding: 80px 40px; max-width: 900px; margin: 0 auto; }
+  .about-box {
+    background: var(--white);
+    border: 2px solid var(--purple-pale);
+    border-radius: 20px;
+    padding: 40px 48px;
+    box-shadow: 0 8px 40px rgba(88,44,131,0.08);
+    position: relative;
+  }
+  .about-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--gold));
+    border-radius: 20px 20px 0 0;
+  }
+  .about-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--purple);
+    margin-bottom: 16px;
+  }
+  .about-box p { font-size: 1rem; line-height: 1.8; color: #444; }
+  .about-bullets { margin-top: 14px; padding-left: 0; list-style: none; }
+  .about-bullets li { padding: 5px 0 5px 22px; position: relative; color: #555; font-size: 0.97rem; line-height: 1.6; }
+  .about-bullets li::before { content: '✦'; position: absolute; left: 0; color: var(--gold); font-size: 0.7rem; top: 8px; }
+
+  /* Interests section */
+  .interests-section {
+    background: var(--gray-light);
+    padding: 80px 40px;
+    text-align: center;
+  }
+  .interests-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--purple); margin-bottom: 14px;
+  }
+  .interests-section .sub { font-size: 1.05rem; color: var(--gray); max-width: 500px; margin: 0 auto 44px; line-height: 1.7; }
+
+  .choice-boxes { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; }
+  .choice-box {
+    flex: 1; min-width: 280px; max-width: 380px;
+    background: var(--white); border-radius: 16px;
+    padding: 36px 32px;
+    box-shadow: 0 4px 24px rgba(88,44,131,0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    text-align: left;
+  }
+  .choice-box:hover { border-color: var(--purple); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(88,44,131,0.15); }
+  .choice-badge {
+    display: inline-block;
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
+    margin-bottom: 16px; text-transform: uppercase;
+  }
+  .yes-badge { background: rgba(88,44,131,0.1); color: var(--purple); }
+  .no-badge { background: rgba(201,168,76,0.15); color: #8a6a00; }
+  .choice-box h3 { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--text); margin-bottom: 10px; }
+  .choice-box p { font-size: 0.95rem; color: var(--gray); line-height: 1.6; margin-bottom: 18px; }
+  .choice-link {
+    color: var(--purple); font-weight: 600; font-size: 0.95rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .choice-link:hover { color: var(--purple-light); }
+  .choice-link::after { content: '→'; }
+
+  .assessment-links { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .assess-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    background: var(--gray-light); text-decoration: none;
+    color: var(--text); font-size: 0.92rem; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .assess-link:hover { background: var(--purple-pale); color: var(--purple); }
+  .assess-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--purple); color: white;
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  /* Explore CTA */
+  .explore-cta-section {
+    padding: 80px 40px; text-align: center;
+    background: var(--white);
+  }
+  .explore-cta-box {
+    max-width: 620px; margin: 0 auto;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    border-radius: 20px; padding: 52px 48px;
+    box-shadow: 0 16px 60px rgba(88,44,131,0.25);
+    cursor: pointer; transition: all 0.3s;
+    text-decoration: none; display: block;
+  }
+  .explore-cta-box:hover { transform: translateY(-4px); box-shadow: 0 24px 80px rgba(88,44,131,0.35); }
+  .explore-cta-box .eyebrow { color: var(--gold); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+  .explore-cta-box h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: white; margin-bottom: 12px; }
+  .explore-cta-box p { color: rgba(255,255,255,0.8); font-size: 1rem; line-height: 1.6; }
+  .explore-cta-box .arrow-btn {
+    display: inline-block; margin-top: 24px;
+    background: var(--gold); color: var(--purple-dark);
+    font-weight: 700; font-size: 0.95rem;
+    padding: 12px 28px; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .explore-cta-box:hover .arrow-btn { background: var(--gold-light); }
+
+  /* ====== ALUMNI PAGE ====== */
+  #page-alumni {
+    background: #f0ecf8;
+  }
+
+  /* Alumni-specific nav override — white nav */
+  #page-alumni.active ~ * {}  /* handled via JS class on body */
+
+  .alumni-hero {
+    background: #f0ecf8;
+    padding: 56px 40px 44px;
+    text-align: center;
+  }
+  .alumni-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-weight: 900;
+    color: var(--purple-dark);
+    margin-bottom: 10px;
+    line-height: 1.1;
+  }
+  .alumni-hero h1 span { color: var(--gold); }
+  .alumni-hero .sub-line {
+    font-size: 1rem; color: #888; letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+  .alumni-hero .sub-line span { margin: 0 8px; }
+  .alumni-hero-divider {
+    width: 48px; height: 3px;
+    background: var(--gold);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+
+  .alumni-controls {
+    background: #f0ecf8;
+    padding: 0 40px 32px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .alumni-controls-inner {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .browse-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #888; white-space: nowrap;
+  }
+  .alumni-select-wrap {
+    position: relative; flex: 0 0 260px;
+  }
+  .alumni-select {
+    appearance: none; width: 100%;
+    background: white; border: 1.5px solid #ddd; border-radius: 10px;
+    padding: 11px 36px 11px 16px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem; color: var(--text);
+    cursor: pointer; outline: none;
+    transition: border-color 0.2s;
+  }
+  .alumni-select:focus { border-color: var(--purple); }
+  .alumni-select-wrap::after {
+    content: ''; position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid var(--gold); pointer-events: none;
+  }
+  .alumni-search-wrap {
+    flex: 1; min-width: 220px; position: relative;
+  }
+  .alumni-search-wrap svg {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; fill: #aaa; pointer-events: none;
+  }
+  .alumni-search {
+    width: 100%; background: white;
+    border: 1.5px solid #ddd; border-radius: 10px;
+    padding: 11px 16px 11px 38px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem; color: var(--text); outline: none;
+    transition: border-color 0.2s;
+  }
+  .alumni-search:focus { border-color: var(--purple); }
+  .alumni-search::placeholder { color: #bbb; }
+  .alumni-total {
+    font-size: 0.95rem; font-weight: 700;
+    color: var(--gold); white-space: nowrap; margin-left: auto;
+  }
+
+  .alumni-container {
+    max-width: 1100px; margin: 0 auto; padding: 0 40px 60px;
+  }
+
+  .alumni-category { margin-bottom: 52px; }
+  .alumni-cat-header {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 22px;
+  }
+  .alumni-cat-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem; font-weight: 800;
+    color: var(--purple-dark); margin-right: 16px; white-space: nowrap;
+  }
+  .alumni-cat-line {
+    flex: 1; height: 1.5px; background: #ddd;
+  }
+  .alumni-cat-count {
+    margin-left: 16px;
+    font-size: 0.85rem; color: #aaa; font-weight: 500; white-space: nowrap;
+  }
+
+  .alumni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+  .alumni-card {
+    background: white; border-radius: 14px;
+    border: 1.5px solid rgba(88,44,131,0.08);
+    padding: 24px 24px 20px;
+    transition: all 0.22s;
+    box-shadow: 0 2px 10px rgba(88,44,131,0.04);
+  }
+  .alumni-card:hover {
+    border-color: var(--purple-light);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 32px rgba(88,44,131,0.11);
+  }
+  .alumni-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 800;
+    color: var(--purple-dark); margin-bottom: 4px;
+  }
+  .alumni-year-badge {
+    font-size: 0.78rem; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+    display: block;
+  }
+  .alumni-role-row {
+    display: flex; align-items: flex-start; gap: 9px;
+    margin-bottom: 4px;
+  }
+  .alumni-role-icon {
+    flex-shrink: 0; margin-top: 2px;
+    width: 16px; height: 16px; opacity: 0.4;
+  }
+  .alumni-title-text {
+    font-size: 0.92rem; font-weight: 600; color: var(--text); line-height: 1.4;
+  }
+  .alumni-company-text {
+    font-size: 0.88rem; color: var(--purple-light);
+    margin-left: 25px; margin-bottom: 14px;
+  }
+  .alumni-majors {
+    display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .alumni-major-tag {
+    background: #f0ecf8; color: #666;
+    font-size: 0.76rem; padding: 4px 11px; border-radius: 20px;
+    border: 1px solid #e4ddf0;
+  }
+  .alumni-linkedin {
+    color: var(--gold); font-weight: 700; font-size: 0.88rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    border-top: 1px solid #f0ecf8; padding-top: 12px; width: 100%;
+    transition: color 0.2s;
+  }
+  .alumni-linkedin:hover { color: #8a6a00; }
+  .alumni-linkedin svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* Nav white variant for alumni page */
+  body.alumni-active nav {
+    background: white;
+    box-shadow: 0 1px 0 #e8e4f0;
+  }
+  body.alumni-active .nav-logo { color: var(--purple-dark); }
+  body.alumni-active .nav-logo span { color: var(--gold); }
+  body.alumni-active .nav-links a { color: #666; }
+  body.alumni-active .nav-links a:hover { background: #f5f0fc; color: var(--purple); }
+  body.alumni-active .nav-links a.active {
+    color: var(--purple-dark); background: none;
+    border-bottom: 2px solid var(--gold); border-radius: 0;
+  }
+  body.alumni-active .nav-cta {
+    background: var(--purple) !important;
+    color: white !important;
+  }
+  body.alumni-active .nav-cta:hover { background: var(--purple-light) !important; }
+  .page-header {
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+    padding: 60px 40px 50px;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: white; margin-bottom: 10px;
+  }
+  .page-header p { color: rgba(255,255,255,0.75); font-size: 1.05rem; }
+  .resources-container { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+
+  .booking-banner {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+    border-radius: 16px; padding: 32px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; margin-bottom: 36px; flex-wrap: wrap;
+  }
+  .booking-banner h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: white; margin-bottom: 6px; }
+  .booking-banner p { color: rgba(255,255,255,0.8); font-size: 0.92rem; line-height: 1.6; max-width: 520px; }
+  .booking-btn {
+    background: var(--gold); color: var(--purple-dark);
+    font-weight: 700; font-size: 0.95rem; white-space: nowrap;
+    padding: 12px 24px; border-radius: 8px; text-decoration: none;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .booking-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .resource-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .resource-card {
+    background: white; border-radius: 16px;
+    border: 2px solid var(--purple-pale);
+    padding: 28px 28px 24px;
+    transition: all 0.25s;
+    box-shadow: 0 2px 16px rgba(88,44,131,0.05);
+  }
+  .resource-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 36px rgba(88,44,131,0.12); }
+  .resource-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--purple-pale); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px; font-size: 1.3rem;
+  }
+  .resource-card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--purple); margin-bottom: 10px; }
+  .resource-card p { font-size: 0.92rem; color: var(--gray); line-height: 1.7; margin-bottom: 18px; }
+  .resource-link {
+    color: var(--gold); font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .resource-link:hover { color: #8a6a00; }
+  .resource-link::after { content: ' →'; }
+
+  /* ====== EXPLORE PAGE ====== */
+  .explore-container { max-width: 1000px; margin: 0 auto; padding: 0 40px 60px; }
+
+  .explore-controls {
+    padding: 32px 0 28px;
+  }
+  .explore-controls-inner {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .explore-total {
+    font-size: 0.95rem; font-weight: 700;
+    color: var(--gold); margin-left: auto;
+  }
+
+  .career-category { margin-bottom: 52px; }
+  .career-category-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 22px; padding-bottom: 14px;
+    border-bottom: 2px solid var(--purple-pale);
+  }
+  .career-category-header h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--purple);
+  }
+
+  .career-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+  .career-card {
+    background: white; border-radius: 14px;
+    border: 1.5px solid #ede8f5; padding: 24px;
+    box-shadow: 0 2px 12px rgba(88,44,131,0.05);
+    transition: all 0.25s;
+  }
+  .career-card:hover { border-color: var(--purple); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(88,44,131,0.12); }
+  .career-card h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--purple); margin-bottom: 10px; }
+  .career-card p { font-size: 0.88rem; color: #555; line-height: 1.7; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    nav { padding: 0 16px; }
+    .hero { padding: 60px 20px 50px; }
+    .section, .resources-container, .alumni-container, .explore-container { padding: 40px 16px; }
+    .about-box { padding: 28px 24px; }
+    .choice-boxes { flex-direction: column; align-items: center; }
+    .booking-banner { flex-direction: column; }
+    .explore-cta-box { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">Econ<span>@</span>Furman</a>
+  <div class="nav-links">
+    <a onclick="showPage('alumni')" id="nav-alumni">Alumni</a>
+    <a onclick="showPage('resources')" id="nav-resources">Resources</a>
+    <a onclick="showPage('explore')" class="nav-cta" id="nav-explore">Explore Careers</a>
+  </div>
+</nav>
+
+<!-- ============ HOME PAGE ============ -->
+<div id="page-home" class="page active">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Hi, <span>Welcome!</span></h1>
+      <p class="hero-sub">Let's get started!</p>
+    </div>
+    <div class="scroll-hint">
+      <span>scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section">
+    <div class="about-box">
+      <h2>About</h2>
+      <p>Use this website for exploratory purposes. Use linked resources to find more about personal interests. Browse the Alumni directory to find linked LinkedIn profiles and their current titles. Check out Explore Careers to find common job titles in each industry.</p>
+      <ul class="about-bullets">
+        <li>What kinds of activities would you be willing to do every day?</li>
+        <li>What kind of work drains you or energizes you?</li>
+        <li>Where would you like to live?</li>
+        <li>What things are important to you? Recognition, money, impact?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Interests -->
+  <section class="interests-section">
+    <h2>Do you know what your Interests are?</h2>
+    <p class="sub">Knowing your values, strengths, and general motivations can serve as a starting point.</p>
+
+    <div class="choice-boxes">
+      <!-- YES -->
+      <div class="choice-box">
+        <div class="choice-badge yes-badge">Yes</div>
+        <h3>I know my interests!</h3>
+        <p>Great — connect with Furman Economics alumni who are working in your areas of interest.</p>
+        <a class="choice-link" onclick="showPage('alumni')" style="cursor:pointer;">Get connected with alumni!</a>
+      </div>
+
+      <!-- NO -->
+      <div class="choice-box">
+        <div class="choice-badge no-badge">Not yet</div>
+        <h3>Help me discover them</h3>
+        <p>Take one of these assessments to learn more about yourself and what careers might align with your strengths and personality.</p>
+        <div class="assessment-links">
+          <a class="assess-link" href="https://www.focus2career.com/LoggedIn/MainMenu.cfm?Unique=%7Bts%20%272026-03-31%2016:26:13%27%7D&SID=1605" target="_blank">
+            <span class="assess-num">1</span> FOCUS2 Assessment
+          </a>
+          <a class="assess-link" href="https://www.gallup.com/cliftonstrengths/en/252137/home.aspx" target="_blank">
+            <span class="assess-num">2</span> Clifton Strengths
+          </a>
+          <a class="assess-link" href="https://www.16personalities.com/" target="_blank">
+            <span class="assess-num">3</span> 16 Personalities Test
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore CTA -->
+  <section class="explore-cta-section">
+    <a class="explore-cta-box" onclick="showPage('explore')" style="cursor:pointer;">
+      <div class="eyebrow">Discover Your Path</div>
+      <h2>Explore Careers</h2>
+      <p>See what responsibilities professionals hold in each industry. Learn about common roles economics majors pursue after Furman.</p>
+      <div class="arrow-btn">Browse Industries →</div>
+    </a>
+  </section>
+</div>
+
+<!-- ============ ALUMNI PAGE ============ -->
+<div id="page-alumni" class="page">
+  <div class="alumni-hero">
+    <h1>Alumni <span>Directory</span></h1>
+    <p class="sub-line">Economics Department <span>·</span> Furman University</p>
+    <div class="alumni-hero-divider"></div>
+  </div>
+  <div class="alumni-controls">
+    <div class="alumni-controls-inner">
+      <span class="browse-label">Browse by</span>
+      <div class="alumni-select-wrap">
+        <select class="alumni-select" id="alumni-category-select" onchange="renderAlumni()">
+          <option value="All">All Categories</option>
+        </select>
+      </div>
+      <div class="alumni-search-wrap">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#aaa" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <input class="alumni-search" id="alumni-search" type="text" placeholder="Search name, company, role..." oninput="renderAlumni()">
+      </div>
+      <div class="alumni-total" id="alumni-total">101 alumni</div>
+    </div>
+  </div>
+  <div class="alumni-container" id="alumni-list"></div>
+</div>
+
+<!-- ============ RESOURCES PAGE ============ -->
+<div id="page-resources" class="page">
+  <div class="page-header">
+    <h1>Resources</h1>
+    <p>Tools and guides to support your career journey</p>
+  </div>
+  <div class="resources-container">
+    <!-- Booking banner -->
+    <div class="booking-banner">
+      <div>
+        <h3>📅 Malone Center Appointment</h3>
+        <p>Express concerns, brainstorm plans, discuss strategies, or simply chat with the Career experts at the Malone Center. Navigate to 'Career Center' and then to the 'Appointments' page to book meetings.</p>
+      </div>
+      <a class="booking-btn" href="https://furman.joinhandshake.com/stu/appointments/new" target="_blank">Book Now</a>
+    </div>
+
+    <!-- Resource cards -->
+    <div class="resource-cards">
+      <div class="resource-card">
+        <div class="resource-icon">🔗</div>
+        <h3>LinkedIn Guide</h3>
+        <p>Check out this LinkedIn guide designed for students. Networking through LinkedIn can help build connections and learn from people directly.</p>
+        <a class="resource-link" href="Unknown.html"" target="_blank">View / Download Guide</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="resource-icon">🎓</div>
+        <h3>Coursera</h3>
+        <p>Earn certificates offered by top universities and firms to learn skills and boost your resume. Most courses are free for Furman students.</p>
+        <a class="resource-link" href="https://www.furman.edu/career-services/career-services/coursera/" target="_blank">Access Coursera</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="resource-icon">🏢</div>
+        <h3>Industry-Specific Resources</h3>
+        <p>See more industry-specific information provided by the university, from resume samples to webinars hosted by the Malone Center.</p>
+        <a class="resource-link" href="https://www.furman.edu/career-services/career-services/industry-specific-resources/" target="_blank">Browse Resources</a>
+      </div>
+
+      <div class="resource-card">
+        <div class="resource-icon">💼</div>
+        <h3>Finding Internships</h3>
+        <p>It is almost impossible to know whether you will truly like something unless you've experienced it. Get a feel for the career you might want by experimenting with internships. Better to know sooner rather than later!</p>
+        <a class="resource-link" href="https://www.furman.edu/internships/finding-internships/" target="_blank">Find Internships</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXPLORE PAGE ============ -->
+<div id="page-explore" class="page">
+  <div class="page-header">
+    <h1>Explore Careers</h1>
+    <p>Discover what professionals do day-to-day in each industry</p>
+  </div>
+  <div class="explore-container">
+    <div class="explore-controls">
+      <div class="explore-controls-inner">
+        <span class="browse-label">Browse by</span>
+        <div class="alumni-select-wrap">
+          <select class="alumni-select" id="explore-category-select" onchange="renderExplore()">
+            <option value="All">All Industries</option>
+          </select>
+        </div>
+        <div class="explore-total" id="explore-total"></div>
+      </div>
+    </div>
+    <div id="explore-list"></div>
+  </div>
+</div>
+
+<script>
+// ======= DATA =======
+const alumniData = [
+  {"category":"Banking","job_title":"Capital Markets Associate","name":"Ben Moore","grad_year":2019,"company":"Regions Bank","majors":["Economics","Business Administration- General"],"linkedin":"https://www.linkedin.com/in/benjamin-moore2/"},
+  {"category":"Banking","job_title":"Procurement Manager","name":"Catherine Corrado","grad_year":2016,"company":"Santander","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/catherine-corrado-661386105/"},
+  {"category":"Banking","job_title":"Senior Manager, Collection Strategy & Analysis","name":"Michael Bargar","grad_year":2010,"company":"Lending Point","majors":["Economics","History"],"linkedin":"https://www.linkedin.com/in/michaelbargar/"},
+  {"category":"Banking","job_title":"President & CEO","name":"Reggie O'Shields","grad_year":1993,"company":"Federal Home Loan Bank of Atlanta","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/reginald-o-shields-78081339/"},
+  {"category":"Banking","job_title":"Counterparty Credit Risk Manager","name":"Richard Harris","grad_year":1998,"company":"Wells Fargo","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/richard-harris-clt/"},
+  {"category":"Banking","job_title":"Commercial Credit Underwriter II-SBA","name":"Benjamin El-Wardany","grad_year":2022,"company":"TD","majors":["Economics","Psychology"],"linkedin":"https://www.linkedin.com/in/benjamin-el-wardany/"},
+  {"category":"Banking","job_title":"SVP- Risk Advisory Lead","name":"Jennifer Edwards","grad_year":2004,"company":"Truist","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/jennifer-edwards-mba-7b17a078/"},
+  {"category":"Consulting","job_title":"Manager","name":"Claire Davis","grad_year":2019,"company":"Alvarez & Marsal","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/clairedavisb227aa144/"},
+  {"category":"Consulting","job_title":"Consultant","name":"Cole Kuczerpa","grad_year":2014,"company":"Bain & Company","majors":["Economics","Pre-med"],"linkedin":"https://www.linkedin.com/in/cole-kuczerpa-6644959a/"},
+  {"category":"Consulting","job_title":"Finance Manager","name":"Kathleen Marsh","grad_year":2018,"company":"Latham & Watkins","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/kathleen-marsh-245108a9/"},
+  {"category":"Consulting","job_title":"Business Development Consultant","name":"Ian Martens","grad_year":2022,"company":"Illustrata","majors":["Economics","IT"],"linkedin":"https://www.linkedin.com/in/imartens/"},
+  {"category":"Consulting","job_title":"Leadership Advisory Services","name":"Mary Grace Kennedy","grad_year":2013,"company":"Spencer Stuart","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/mary-grace-kennedy/"},
+  {"category":"Consulting","job_title":"Lead Associate","name":"Cameron Egan","grad_year":2013,"company":"Booz Allen Hamilton","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/cameron-egan-0899525a/"},
+  {"category":"Consulting","job_title":"Senior Manager","name":"Aubrie Borton","grad_year":2014,"company":"Bain & Company","majors":["Economics","Math-Economics"],"linkedin":"https://www.linkedin.com/in/aubrie-street/"},
+  {"category":"Consulting","job_title":"Senior Director of Advancement Services","name":"Jillian Tintle","grad_year":2011,"company":"Medical University of South Carolina","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/jilliantintle/"},
+  {"category":"Consulting","job_title":"Consultant","name":"Bryan Taylor","grad_year":2007,"company":"Daniels Consulting Group","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/bryanptaylor/"},
+  {"category":"Consulting","job_title":"Senior Vice President","name":"Arvid Tchivzhel","grad_year":2008,"company":"Mather Economics","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/arvidt/"},
+  {"category":"Consulting","job_title":"Director","name":"Zack Houghton","grad_year":2012,"company":"The Alexander Group","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/zack-houghton-bab8a83b/"},
+  {"category":"Consulting","job_title":"Transaction Advisory Manager","name":"Jarrod Rickman","grad_year":2015,"company":"Alvarez & Marsal","majors":["Economics","Business"],"linkedin":"https://www.linkedin.com/in/jarrod-rickman-cpa-4ab1b080/"},
+  {"category":"Consulting","job_title":"Senior Data Scientist","name":"Chad Scott","grad_year":2016,"company":"Deloitte","majors":["Economics","Politics"],"linkedin":"https://www.linkedin.com/in/scottchadr/"},
+  {"category":"Consulting","job_title":"Senior Associate","name":"Amy Stewart","grad_year":2020,"company":"KPMG","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/amyrstewart98/"},
+  {"category":"Consulting","job_title":"Europe Plans Officer","name":"Trent Emeneker","grad_year":2002,"company":"United States Marine Corps","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/trentemeneker/"},
+  {"category":"Consulting","job_title":"Director, Strategy","name":"Bethany Welstead","grad_year":2011,"company":"KPMG","majors":["Economics","Health Sciences"],"linkedin":"https://www.linkedin.com/in/bethany-welstead-448aba71/"},
+  {"category":"Consulting","job_title":"Founder & CEO","name":"Grady Powell","grad_year":2003,"company":"Openfields","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/jgradypowell/"},
+  {"category":"Corporate","job_title":"Lead Data Scientist","name":"Tommy Cuthbertson","grad_year":2013,"company":"Cox Automotive Inc.","majors":["Economics","Math-Economics"],"linkedin":"https://www.linkedin.com/in/thomascuthbertson/"},
+  {"category":"Corporate","job_title":"Senior Advisor, Sales Planning and Operations","name":"Manali Lindsey","grad_year":2015,"company":"Dell Technologies","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/manalimacrae/"},
+  {"category":"Corporate","job_title":"Senior Marketing Analyst","name":"Menza Dudley","grad_year":2018,"company":"Sonic Automotive","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/menza-dudley/"},
+  {"category":"Corporate","job_title":"Senior Finance Manager","name":"Alexander Draftz","grad_year":2012,"company":"Boeing","majors":["Economics","Business Administration"],"linkedin":"https://www.linkedin.com/in/alexdraftz/"},
+  {"category":"Corporate","job_title":"Senior Director of Energy & Utilities Sales","name":"Brian Edens","grad_year":1994,"company":"Total Resource Management","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/brianedens/"},
+  {"category":"Corporate","job_title":"Director","name":"McIver Prickett","grad_year":2016,"company":"Spark Foundry","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/mciver-prickett-777291111/"},
+  {"category":"Corporate","job_title":"Senior Program Manager","name":"Addison Traina","grad_year":2015,"company":"IAC","majors":["Economics","Religion"],"linkedin":"https://www.linkedin.com/in/addison-traina-34783b51/"},
+  {"category":"Corporate","job_title":"Director- Technology Business Management","name":"Kelly Wendelborn","grad_year":2009,"company":"Lowe's Companies, Inc.","majors":["Economics","Business Administration"],"linkedin":"https://www.linkedin.com/in/kelley-wendelborn-632b8313/"},
+  {"category":"Corporate","job_title":"Corporate Finance","name":"Radoslav Dimitrov","grad_year":2012,"company":"INEOS","majors":["Economics","Business Administration"],"linkedin":"https://www.linkedin.com/in/radoslav-dimitrov-a2153024/"},
+  {"category":"Education","job_title":"Associate Director","name":"Davis Cousar","grad_year":2020,"company":"EAB","majors":["Economics","Politics & International Affairs"],"linkedin":"https://www.linkedin.com/in/davis-cousar-8a7970143/"},
+  {"category":"Education","job_title":"Senior Client Success Specialist","name":"Nathaniel Johnson","grad_year":2023,"company":"BoomPop","majors":["Economics","Philosophy"],"linkedin":"https://www.linkedin.com/in/nathanieljohnson123/"},
+  {"category":"Education","job_title":"Campus Director","name":"Thomas Flood","grad_year":2012,"company":"Art of Problem Solving","majors":["Math-Economics","WGS"],"linkedin":"https://www.linkedin.com/in/thomas-flood-10622b37/"},
+  {"category":"Finance/Investment","job_title":"Director of Strategy","name":"Grace Filipski","grad_year":2017,"company":"Morgan Stanley","majors":["Economics","IT"],"linkedin":"https://www.linkedin.com/in/gracefilipski/"},
+  {"category":"Finance/Investment","job_title":"Law Student","name":"Julia Copperwheat","grad_year":2017,"company":"Syracuse University College of Law","majors":["Economics","Urban Studies"],"linkedin":"https://www.linkedin.com/in/juliacopperwheat/"},
+  {"category":"Finance/Investment","job_title":"Cash Operations Manager","name":"Payton Burrell","grad_year":2021,"company":"Newrez LLC","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/paytonburrell/"},
+  {"category":"Finance/Investment","job_title":"Wealth Strategist II","name":"Zach Graves","grad_year":2017,"company":"Edward Jones","majors":["Economics","Business Administration"],"linkedin":"https://www.linkedin.com/in/zach-graves99/"},
+  {"category":"Finance/Investment","job_title":"Financial Advisor","name":"Drew Warner","grad_year":2022,"company":"Pelora Advisors","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/drewwarner25/"},
+  {"category":"Finance/Investment","job_title":"Vice President","name":"Matthew Brown","grad_year":2013,"company":"Shore Capital Partners","majors":["Economics","Political Science"],"linkedin":"https://www.linkedin.com/in/mbrown2120/"},
+  {"category":"Finance/Investment","job_title":"Senior Vice President","name":"Justin Rizzi","grad_year":2014,"company":"Golub Capital","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/justin-rizzi-a7a8a060/"},
+  {"category":"Finance/Investment","job_title":"Client Service Associate","name":"Mathew Daponte","grad_year":2018,"company":"Stifel Financial Corp.","majors":["Economics","History"],"linkedin":"https://www.linkedin.com/in/matthewdaponte/"},
+  {"category":"Finance/Investment","job_title":"Director of Product Manager","name":"Adam Reader Lalor","grad_year":2013,"company":"Corpay","majors":["Economics","History"],"linkedin":"https://www.linkedin.com/in/adam-reader-lalor-36150341/"},
+  {"category":"Finance/Investment","job_title":"Director, Product Management","name":"Will Lear","grad_year":2016,"company":"Mastercard","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/will-lear/"},
+  {"category":"Finance/Investment","job_title":"Director, Investments","name":"Alex Dupre","grad_year":2017,"company":"Canal Insurance Company","majors":["Math-Economics"],"linkedin":"https://www.linkedin.com/in/alex-dupre-cfa-930402b9/"},
+  {"category":"Finance/Investment","job_title":"CEO","name":"Dustin Magaziner","grad_year":2015,"company":"PayBright","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/dmagaziner/"},
+  {"category":"Finance/Investment","job_title":"Chief of Staff","name":"Benjamin Medrano","grad_year":2019,"company":"ScoreVision","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/ben-medrano-91b168128/"},
+  {"category":"Finance/Investment","job_title":"Investment Director, Sustainable & Impact Investing","name":"Madeline Clark","grad_year":2014,"company":"Cambridge Associates","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/madeline-clark-10a3ab7a/"},
+  {"category":"Finance/Investment","job_title":"Head of Product","name":"Kyle Courtney","grad_year":2017,"company":"Nephila Advisors LLC","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/kyle-courtney5723/"},
+  {"category":"Finance/Investment","job_title":"Vice President, Financial Consultant","name":"Austin Linsky","grad_year":2014,"company":"Fidelity Investments","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/austin-linsky/"},
+  {"category":"Finance/Investment","job_title":"Director","name":"Brent Blankenship","grad_year":2005,"company":"Trivest Partners","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/brentblankenship/"},
+  {"category":"Government","job_title":"Chief Economist","name":"Will Doerner","grad_year":2004,"company":"Federal Housing Finance Agency","majors":["Math-Economics","Urban Studies"],"linkedin":"https://www.linkedin.com/in/williamdoerner/"},
+  {"category":"Government","job_title":"Principal Data Scientist","name":"Will Wright","grad_year":2011,"company":"Atlanta Regional Commission","majors":["Math-Economics"],"linkedin":"https://www.linkedin.com/in/willwrightjr/"},
+  {"category":"Government","job_title":"Financial Economist","name":"Quinton White","grad_year":2008,"company":"U.S. Department of the Treasury","majors":["Economics","Sociology"],"linkedin":"https://www.linkedin.com/in/quinton-white-87335530/"},
+  {"category":"Government","job_title":"Research Officer","name":"Jenny Lee","grad_year":2017,"company":"International Monetary Fund","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/jrl/"},
+  {"category":"Government","job_title":"Director of Research","name":"Patrick Ramjug","grad_year":2017,"company":"Mind the Gap","majors":["Economics","Political Science"],"linkedin":"https://www.linkedin.com/in/patrick-ramjug-phd-04866012a/"},
+  {"category":"Government","job_title":"Director, Office of Performance Management","name":"Sarah Harris","grad_year":2014,"company":"City of Memphis","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/sarah-harris-06ba0281/"},
+  {"category":"Government","job_title":"Chief of Staff","name":"Darcy Merline","grad_year":2020,"company":"U.S. House of Representatives","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/darcy-merline/"},
+  {"category":"Health Industries","job_title":"Inpatient Pediatric Hematology/Oncology/BMT APP Team Lead","name":"Anna Spykerman","grad_year":2020,"company":"University of Iowa Healthcare","majors":["Economics","Political Science"],"linkedin":"https://www.linkedin.com/in/anna-spykerman-dnp-539b3988/"},
+  {"category":"Health Industries","job_title":"Operating Room Specialist","name":"Emily Martens","grad_year":2022,"company":"Cardinal Health","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/emilycapetamartens/"},
+  {"category":"Health Industries","job_title":"Consultant","name":"Walker Seman","grad_year":2020,"company":"Kaiser Permanente","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/walkerseman/"},
+  {"category":"Health Industries","job_title":"Chief Financial Officer","name":"Justin Stump","grad_year":2004,"company":"Cultivate Behavioral Health & Education","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/justin-stump-262a945/"},
+  {"category":"Health Industries","job_title":"Senior Research Analyst","name":"Ashley Rogers","grad_year":2014,"company":"FRANdata","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/ashleygrogers1710/"},
+  {"category":"Health Industries","job_title":"Clinical Project Director","name":"Marissa Pavia","grad_year":2011,"company":"Epic","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/marissa-pavia-collins-23835827/"},
+  {"category":"Health Industries","job_title":"Vice President, Operations & Development","name":"Lauren Ferrell","grad_year":2011,"company":"Bon Secours Mercy Health","majors":["Math-Economics"],"linkedin":"https://www.linkedin.com/in/lauren-ferrell-049a3129/"},
+  {"category":"Insurance","job_title":"CEO","name":"Bobby Samuelson","grad_year":2007,"company":"Life Innovators","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/bobby-samuelson-32562a7/"},
+  {"category":"Insurance","job_title":"Incentive Compensation Director","name":"Chris Conner","grad_year":2005,"company":"Gallagher","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/chrisconnermba/"},
+  {"category":"Insurance","job_title":"Assistant Vice President, Corporate Strategy","name":"Carlyle Jackson","grad_year":2009,"company":"Unum","majors":["Economics","Political Science"],"linkedin":"https://www.linkedin.com/in/carlyle-jackson-66b17522/"},
+  {"category":"Legal","job_title":"Judicial Law Clerk","name":"Rosemary Coskrey","grad_year":2020,"company":"U.S. Court of Appeals, DC Circuit","majors":["Math-Economics"],"linkedin":"https://www.linkedin.com/in/rosemary-coskrey/"},
+  {"category":"Legal","job_title":"Senior Counsel","name":"Corey Allen","grad_year":2013,"company":"Oxy","majors":["Economics","Politics"],"linkedin":"https://www.linkedin.com/in/corey-allen-4766111b/"},
+  {"category":"Legal","job_title":"General Counsel","name":"TJ Wells","grad_year":2004,"company":"ICG Capital Group, LLC","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/tj-wells/"},
+  {"category":"Legal","job_title":"Partner","name":"Lauren Papenhausen","grad_year":1999,"company":"White & Case LLP","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/lauren-papenhausen-64835145/"},
+  {"category":"Legal","job_title":"Senior Counsel","name":"Catherine Neumann","grad_year":2008,"company":"Smurfit Westrock","majors":["Economics","Environment"],"linkedin":"https://www.linkedin.com/in/catherine-mattingly-neumann-3b464412/"},
+  {"category":"Legal","job_title":"M&A Associate","name":"Caleb Crowe","grad_year":2019,"company":"A&O Shearman","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/calebcrowe11296/"},
+  {"category":"Legal","job_title":"Associate","name":"Carter Overbey","grad_year":2020,"company":"Goldberg Segalla","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/carter-overbey-715391144/"},
+  {"category":"Legal","job_title":"Assistant County Attorney- Civil","name":"Ben Longnecker","grad_year":2017,"company":"Jefferson County, Colorado","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/ben-longnecker-34992b147/"},
+  {"category":"Legal","job_title":"Special Counsel","name":"Russell Guilfoile","grad_year":2009,"company":"US Army","majors":["Economics","Business"],"linkedin":"https://www.linkedin.com/in/russell-guilfoile/"},
+  {"category":"Marketing and Business Strategy","job_title":"Senior Manager, Customer Insights","name":"Pam Evett","grad_year":2007,"company":"Hilton","majors":["Economics","Music"],"linkedin":"https://www.linkedin.com/in/pamevett/"},
+  {"category":"Marketing and Business Strategy","job_title":"Global Brand Director- American Whiskey","name":"Tyler Smith","grad_year":2015,"company":"Sazerac Company","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/tylerlawsonsmith/"},
+  {"category":"Marketing and Business Strategy","job_title":"Chief Data Officer","name":"Hart Zwingelberg","grad_year":2015,"company":"Purveyor Sports","majors":["Math-Economics"],"linkedin":"https://www.linkedin.com/in/hartzwing/"},
+  {"category":"Marketing and Business Strategy","job_title":"Senior Business Analytics Manager","name":"Andrew Cromer","grad_year":2019,"company":"AFS Logistics","majors":["Math-Economics","Mathematics"],"linkedin":"https://www.linkedin.com/in/andrew-w-cromer/"},
+  {"category":"Non-profit","job_title":"Client Service Associate","name":"Robert Cain","grad_year":2019,"company":"Align Impact","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/robert-cain/"},
+  {"category":"Non-profit","job_title":"Associate Consultant, GIS","name":"Joe Hiebert","grad_year":2018,"company":"WSP in the U.S.","majors":["Economics","Sustainability"],"linkedin":"https://www.linkedin.com/in/joehiebert/"},
+  {"category":"Non-profit","job_title":"Executive Director","name":"Bill McMoil","grad_year":1986,"company":"Regulatory Affairs Professionals Society","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/billmcmoil/"},
+  {"category":"Non-profit","job_title":"Senior-Level Researcher","name":"Kristen Giombi","grad_year":2008,"company":"RTI International","majors":["Economics","Politics"],"linkedin":"https://www.linkedin.com/in/kristen-giombi/"},
+  {"category":"Professorships and University-level Research","job_title":"Head of Strategic Investments","name":"Eli Dourado","grad_year":2002,"company":"Astera Institute","majors":["Economics","Politics"],"linkedin":"https://www.linkedin.com/in/elidourado/"},
+  {"category":"Professorships and University-level Research","job_title":"Jaffrey Chair of Political Economy","name":"Keith Bender","grad_year":1990,"company":"University of Aberdeen","majors":["Economics","History"],"linkedin":"https://www.linkedin.com/in/keith-bender-phd/"},
+  {"category":"Professorships and University-level Research","job_title":"PhD Student","name":"Matthew Dehaven","grad_year":2018,"company":"Brown University","majors":["Math-Economics","Politics"],"linkedin":"https://www.linkedin.com/in/matthew-dehaven-067856b6/"},
+  {"category":"Professorships and University-level Research","job_title":"Assistant Professor of Economics","name":"Nino Kodua","grad_year":2019,"company":"College of the Holy Cross","majors":["Math-Economics","Accounting"],"linkedin":"https://www.linkedin.com/in/nino-kodua/"},
+  {"category":"Real Estate","job_title":"Underwriter","name":"Madeline Bright","grad_year":2019,"company":"Armada Analytics, Inc.","majors":["Economics","Business Administration"],"linkedin":"https://www.linkedin.com/in/madeline-bright/"},
+  {"category":"Real Estate","job_title":"Vice President of Capital Markets & Leasing","name":"Jennifer Tatum","grad_year":2005,"company":"Skanska","majors":["Economics","History"],"linkedin":"https://www.linkedin.com/in/jennifer-ralph-tatum/"},
+  {"category":"Real Estate","job_title":"Owner","name":"Christopher Butler","grad_year":2010,"company":"KOM Storage Investments","majors":["Economics","Accounting"],"linkedin":"https://www.linkedin.com/in/chrisdbutler1/"},
+  {"category":"Real Estate","job_title":"Founder and CEO","name":"Boris Michev","grad_year":2007,"company":"Sunrise Real Estate","majors":["Economics"],"linkedin":"https://www.linkedin.com/in/boris-michev-70750719/"},
+  {"category":"Real Estate","job_title":"Principal, Acquisitions","name":"Chris Picardi","grad_year":2012,"company":"Equity Resource Investments","majors":["Economics","Spanish"],"linkedin":"https://www.linkedin.com/in/chris-picardi-45939638/"},
+  {"category":"Self-Employed","job_title":"Franchisee Business Partner","name":"Evan Rusca","grad_year":2016,"company":"HANA Group US","majors":["Economics","Japanese"],"linkedin":"https://www.linkedin.com/in/evan-r-4b0b02125/"},
+  {"category":"Self-Employed","job_title":"Program and Product Manager","name":"John Vangellow","grad_year":2018,"company":"LenelS2","majors":["Economics","Health Science"],"linkedin":"https://www.linkedin.com/in/johnvangellow/"},
+  {"category":"Tech","job_title":"Head of Competitions Program Management","name":"Addison Howard","grad_year":2010,"company":"Google","majors":["Economics","Accounting, Math-Economics"],"linkedin":"https://www.linkedin.com/in/addison-howard-3ab25a25/"},
+  {"category":"Tech","job_title":"Associate Director, Analytics & Demand Generation","name":"Moriah Ivins","grad_year":2018,"company":"IBM","majors":["Math-Economics","Computing, Applied Math"],"linkedin":"https://www.linkedin.com/in/moriah-ivins/"},
+  {"category":"Tech","job_title":"Scholar","name":"Emerald Dudzinski","grad_year":2011,"company":"","majors":["Economics","Math"],"linkedin":"https://www.linkedin.com/in/emma-dudzinski/"}
+];
+
+const careersData = [
+  {"category":"CONSULTING","position":"Economic Consultant","description":"An Economic consultant conducts research to analyse a firm's economic condition. You will work with data in ways such as analyzing an organisation's historical data and identifying patterns, analyse market trends, evaluate how policy changes and/or certain products can affect the firm. You will also present findings and can get to write for economic publications. Developing models for specific markets and providing testimony as an expert witness in public hearings and lawsuits are also very common responsibilities."},
+  {"category":"CONSULTING","position":"Management Consultant","description":"Management consultants work closely with businesses to improve processes, solve problems the firm is facing through data analysis and work closely with senior management. Examples of problems that these consultants try to solve could be low productivity, declining profits, poor communication, or declining market share, among many others. Consulting can be general, or very specific depending on the size and nature of the firm. Some examples of specificity include: business strategy, risk management, mergers and acquisitions, digital transformation, talent management, and marketing."},
+  {"category":"CONSULTING","position":"Strategy Consultant","description":"Often considered to be a form of management consulting, this role would involve you to plan and advise business on matters that affect their profitability. Industry knowledge and analytical skills are expected to provide evidence-based market strategies for business development. Common roles involve conducting market research, reviewing case studies, assessing deals, adhering to laws for firms and presenting solutions."},
+  {"category":"FINANCE/BANKING/INVESTMENT","position":"Investment Banker","description":"These individuals advise businesses and governments on how to raise capital through stocks and bonds. You will partake in facilitating financial transactions such as acquisitions, and mergers and help capitalize market opportunities for their clients. You will be required to be an expert in the finance field and constantly keep up with the market and investment trends, making this field incredibly demanding. Investment bankers have strong analytical skills, deep knowledge about navigating regulation requirements and assist with pricing stocks, bonds, and other financial instruments."},
+  {"category":"FINANCE/BANKING/INVESTMENT","position":"Financial Analyst","description":"In this field, strong mathematical and analytical skills are required to make informed investment recommendations. An understanding of the macroeconomic environment is preferred and roles can include evaluating financial statements, creating financial models to predict future outcomes, researching market-specific trends, both economic and business, and keeping up with new technologies to better communicate recommendations."},
+  {"category":"FINANCE/BANKING/INVESTMENT","position":"Asset Manager","description":"This role would involve maintaining a client's investments by assessing costs and profits of a piece of property and providing recommendations to increase profitability. You will also be responsible for buying and trading stocks for your clients based on analysts' data recommendations. Investments such as real estate property as well as other financial assets like stocks are handled by these individuals."},
+  {"category":"GOVERNMENT","position":"Fiscal Analyst","description":"These individuals are responsible for analyzing any finance-related data for the purposes of budgeting, forecasting, and cost management. A strong understanding of financial principles is necessary and typically professional certifications are preferred. This role is an intersection between accounting, finance and economics as it involves drawing knowledge from these different fields into evaluating financial data, market trends and proposing financial plans and budgets."},
+  {"category":"GOVERNMENT","position":"Economist","description":"Economists conduct surveys, collect data and analyze it using statistical tools and other software to interpret trends and do forecasts. They report to businesses or governments regarding economic topics. Communication occurs through graphs, articles, academic journals, and/or government publications. Topics related to production, consumption of economic goods and services, inflation, interest rates, business trends, environment, among many other topics are analyzed. Using historical data and current analysis, they make forecasts and help influence policymakers' decisions."},
+  {"category":"GOVERNMENT","position":"Policy Analyst","description":"Policy analysts review, analyze, update and develop policies of government agencies and businesses. They conduct extensive research to guide their analysis and drafting of policy documents. They also collaborate with other departments to make informed decisions regarding operations and strategy for creating and implementing policies and programs. They also maintain and update databases with policy information, research and statistics. They share policy information through reports and presentations, and reports are shared with policymakers, government officials and to the public as well."},
+  {"category":"LEGAL","position":"Law Clerk","description":"This professional helps a judge make legal decisions. Their duties depend on the type of case they are working on. Common responsibilities are researching laws and legal precedents from past cases to assist current decision making, advising legal team members of case facts, managing evidence and taking statements from witnesses, drafting legal documents such as trial briefs, and delivering subpoenas."},
+  {"category":"LEGAL","position":"General Counsel","description":"General counsels provide legal advice to management, ranging from legal matters, to labor law. They ensure compliance of legal and regulatory requirements within the organization. They manage due diligences, mitigate legal issues, identify potential legal risks to mitigate and oversee crisis management. Strong legal experience, research skills, and leadership abilities are necessary. They can be providing guidance on various aspects in a firm, from financial management, mergers and acquisitions to public policy."},
+  {"category":"LEGAL","position":"Attorney","description":"An attorney advises and represents clients in civil and criminal cases. Their key duties involve advising, researching case elements such as accident or police reports, drafting legal documents, negotiating settlements, developing strategies to manage client's issues, defending clients' best interests in court and discussing agreements with the district attorney's office."},
+  {"category":"HEALTH INDUSTRIES","position":"Clinical Research Analyst","description":"These analysts works with clinical research professionals and use science knowledge and analytical skills in their role. They collect data from clinical trial sites for further study, do research accounting and budgeting, coordinate clinical research studies by tracking inventory, collection of data, interacting with patients and also act as the primary financial source for a clinical study."},
+  {"category":"HEALTH INDUSTRIES","position":"Project Manager","description":"In this role, you will be overseeing a project's life cycle, and actively be involved in strategic thinking, problem-solving, organizing and leading. Staying on schedule and within budgets, communicating with stakeholders, managing resources (teams as well) and ensuring quality are all within your responsibilities. Common goals would include enhancing patient care, taking on projects that seek to increase efficiency, such as the addition of a new hospital wing, implementing training, etc."},
+  {"category":"HEALTH INDUSTRIES","position":"Health Consultant","description":"This is a professional who finds methods to reduce costs and increase revenue while maintaining patient satisfaction. They work with higher management to focus on solving problems and improving efficiency. Interpreting budgets and financial statements are necessary skills to have to help the organization save money."},
+  {"category":"INSURANCE","position":"Claim Specialist","description":"This role involves assessing damages from accidents or weather for commercial properties and homes, and communicating with agents and policyholders to settle claims. Fieldwork, gathering necessary evidence, documenting findings, and preparing reports are all included in the description. Negotiating and settling claims are done with compliance to company and local guidelines, as well as policy terms."},
+  {"category":"INSURANCE","position":"Underwriter","description":"An underwriter focuses on evaluating business risks and determining pricing within the insurance industry. This position involves analyzing information to make insurance-related decisions, developing client relationships, and ensuring compliance with business and regulatory standards."},
+  {"category":"INSURANCE","position":"Actuarial Analyst","description":"An actuarial analyst uses advanced statistical models to evaluate data and assess risk for an organisation. Their findings are compiled in specialised software and spreadsheets. Identifying data trends, finding and verifying data, determining limitations within datasets, helping design insurance policies, and writing reports are common responsibilities."},
+  {"category":"REAL-ESTATE","position":"Real Estate Analyst","description":"This role involves conducting research, compiling and analyzing financial data to help stakeholders make important property investment choices. They are expected to determine return on investments, analyze market trends, carry out property valuation with consideration to property's factors, and find future values. Knowledge of economic trends, real estate prices, and customer preferences are expected."},
+  {"category":"REAL-ESTATE","position":"Underwriter","description":"An underwriter in real estate determines whether a property's sale price matches the appraised value and ensures potential risks are mitigated while confirming a deal. Knowledge of loan types, credit analysis, financial statement and risk analysis, regulations and banking products are common requirements. Financial modeling, valuation and creative problem-solving skills are necessary. There are many types such as insurance, securities and mortgage underwriting."},
+  {"category":"REAL-ESTATE","position":"Real Estate Agent","description":"This professional arranges real estate transactions and acts as a representative during negotiations. Their responsibilities include developing a roster of people who are interested in purchasing, selling or renting property, publishing listings describing properties' features and benefits, arrange and attend property viewings to interrogate and compare market values and prices. They ultimately handle negotiations between buyers and sellers and create contracts and legal documents to transfer property ownerships."},
+  {"category":"NON-PROFIT","position":"Grant Writer","description":"A grant writer is responsible for securing an organisation funding through written proposals to earn grant money. Common responsibilities of grant writers include researching grant opportunities from government and non-government agencies, drafting grant proposals and supporting documents, responding to internal and external queries on proposals, and maintaining records related to grant opportunities."},
+  {"category":"NON-PROFIT","position":"Program Manager","description":"These individuals oversee many responsibilities to ensure an organization's progress. They develop programs that align with the organization's missions, oversee execution of programs by managing resources and timelines, supervise staff and volunteers, manage program budgets, and also use data to drive decision making. Community engagement and maintaining relationships are also key."},
+  {"category":"NON-PROFIT","position":"Senior Researcher","description":"This professional designs and executes surveys, interviews and leads both quantitative and qualitative research that impact organizational strategy. Common duties involve data collection, data analysis, and policy analysis. A program's social impact is evaluated by these individuals, and peer-reviewed publications are expected."},
+  {"category":"TECH","position":"Product Manager","description":"Product managers oversee management of the product's life cycle. They do not build the product but conduct market research to identify what products will boost customer satisfaction and serve the best interests of the organization. They work closely with technologists to determine what products and features will best align with the company's business strategy."},
+  {"category":"TECH","position":"Data Scientist","description":"These individuals collect data from business results, transform data into a more appropriate format for analysis, building tools for automating data collection, navigating large data sets and creating reports and presentations to make business-related decisions."},
+  {"category":"TECH","position":"Pricing Analyst","description":"This professional analyses pricing data from the overall market, previous trends, and competitors to identify strategies to increase profits. They develop measurement tools to identify market trends and use such analyses to make decisions about optimal pricing strategies."},
+  {"category":"CORPORATE/MARKETING AND BUSINESS STRATEGY","position":"Chief Data Officer","description":"A chief data officer is responsible for using a firm's data to maximize business value. They oversee collection, and storage of data within an organization. Working closely with stakeholders to define and meet organizational goals using data is a CDO's aim. They create the vision for using the data that the company collects and they oversee data usability, and efficiency while overseeing other data analysts."},
+  {"category":"CORPORATE/MARKETING AND BUSINESS STRATEGY","position":"Senior Business Analytics Manager","description":"These individuals develop strategies to improve data analysis. They track these efficiencies and make decisions about when to change strategies. They research the most recent industry trends to ensure the firm is competing well. They are responsible for building the systems that help to smoothly turn data into insights."},
+  {"category":"CORPORATE/MARKETING AND BUSINESS STRATEGY","position":"Market Research Analyst","description":"This professional keeps a close watch on market trends so they can keep up with marketing strategies. Common responsibilities include collecting data about consumers and competitors (usually about products and preferred prices), analysing market conditions with statistical software, and converting data into reports and presentations that can be shared with management."},
+  {"category":"PROFESSORSHIPS & UNIVERSITY-LEVEL RESEARCH","position":"Research Associate","description":"A research associate commonly reviews available, relevant literature to find information for their next research project. They gather data through experiments or surveys, and seek patterns in their analysis to present at research findings. They can also collaborate with other researchers, and ensure integrity throughout their research. Presenting findings at academic conferences and seminars is usually expected and they even engage with current research to stay up to date."},
+  {"category":"PROFESSORSHIPS & UNIVERSITY-LEVEL RESEARCH","position":"Professor","description":"A college professor spends most of their time preparing activities such as lectures, assignments, projects to enhance students' progress. They also engage in scholarly research outside of class and can go on to present at conferences and publish their work. They serve as guides for students in a variety of academic and career-oriented fields such as supervising internships, planning career paths with a student, and giving advice. These individuals also can be more involved in an institution's education system by taking on administrative roles like serving on academic committees."},
+  {"category":"PROFESSORSHIPS & UNIVERSITY-LEVEL RESEARCH","position":"Principal Investigator","description":"These individuals are the primary professionals who have to ensure a research project is being conducted safely and with credibility. They have sharp attention to detail to ensure no room for error in data because the results of the data can have significant impacts such as saving patients. They request finances for research projects, manage a team and oversee studies from planning to outcome."}
+];
+
+// ======= NAVIGATION =======
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  document.body.classList.toggle('alumni-active', page === 'alumni');
+  window.scrollTo(0, 0);
+}
+
+// ======= ALUMNI RENDERING =======
+function renderAlumni() {
+  const categories = [...new Set(alumniData.map(a => a.category))].sort();
+
+  // Populate dropdown once
+  const select = document.getElementById('alumni-category-select');
+  if (select && select.options.length === 1) {
+    categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = cat;
+      select.appendChild(opt);
+    });
+  }
+
+  const filterCat = select ? select.value : 'All';
+  const searchQ = (document.getElementById('alumni-search')?.value || '').toLowerCase().trim();
+
+  const list = document.getElementById('alumni-list');
+  list.innerHTML = '';
+
+  const activeCats = filterCat === 'All' ? categories : [filterCat];
+  let totalShown = 0;
+
+  activeCats.forEach(cat => {
+    let members = alumniData.filter(a => a.category === cat);
+    if (searchQ) {
+      members = members.filter(a =>
+        a.name.toLowerCase().includes(searchQ) ||
+        a.job_title.toLowerCase().includes(searchQ) ||
+        a.company.toLowerCase().includes(searchQ) ||
+        a.majors.some(m => m.toLowerCase().includes(searchQ))
+      );
+    }
+    if (!members.length) return;
+    totalShown += members.length;
+
+    const section = document.createElement('div');
+    section.className = 'alumni-category';
+    section.innerHTML = `
+      <div class="alumni-cat-header">
+        <h2>${cat}</h2>
+        <div class="alumni-cat-line"></div>
+        <span class="alumni-cat-count">${members.length} alumni</span>
+      </div>`;
+    const grid = document.createElement('div');
+    grid.className = 'alumni-grid';
+    members.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'alumni-card';
+      const majorTags = a.majors.map(m => `<span class="alumni-major-tag">${m.trim()}</span>`).join('');
+      const briefcaseIcon = `<svg class="alumni-role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>`;
+      card.innerHTML = `
+        <div class="alumni-name">${a.name}</div>
+        <span class="alumni-year-badge">Class of ${a.grad_year}</span>
+        <div class="alumni-role-row">${briefcaseIcon}<span class="alumni-title-text">${a.job_title}</span></div>
+        <div class="alumni-company-text">${a.company || ''}</div>
+        <div class="alumni-majors">${majorTags}</div>
+        ${a.linkedin ? `<a class="alumni-linkedin" href="${a.linkedin}" target="_blank">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn Profile
+        </a>` : ''}
+      `;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    list.appendChild(section);
+  });
+
+  const totalEl = document.getElementById('alumni-total');
+  if (totalEl) totalEl.textContent = totalShown + ' alumni';
+}
+
+// ======= EXPLORE RENDERING =======
+function renderExplore() {
+  const categories = [...new Set(careersData.map(c => c.category))].sort();
+
+  // Populate dropdown (rebuild each time to stay in sync)
+  const select = document.getElementById('explore-category-select');
+  if (select) {
+    const current = select.value;
+    select.innerHTML = '<option value="All">All Industries</option>';
+    categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = cat;
+      select.appendChild(opt);
+    });
+    if ([...select.options].some(o => o.value === current)) select.value = current;
+  }
+
+  const filterCat = select ? select.value : 'All';
+  const list = document.getElementById('explore-list');
+  list.innerHTML = '';
+
+  const activeCats = filterCat === 'All' ? categories : [filterCat];
+  let totalShown = 0;
+
+  activeCats.forEach(cat => {
+    const jobs = careersData.filter(c => c.category === cat);
+    if (!jobs.length) return;
+    totalShown += jobs.length;
+
+    const section = document.createElement('div');
+    section.className = 'career-category';
+    section.innerHTML = `
+      <div class="alumni-cat-header">
+        <h2>${cat}</h2>
+        <div class="alumni-cat-line"></div>
+        <span class="alumni-cat-count">${jobs.length} roles</span>
+      </div>`;
+    const grid = document.createElement('div');
+    grid.className = 'career-cards';
+    jobs.forEach(j => {
+      const card = document.createElement('div');
+      card.className = 'career-card';
+      card.innerHTML = `<h3>${j.position}</h3><p>${j.description}</p>`;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    list.appendChild(section);
+  });
+
+  const totalEl = document.getElementById('explore-total');
+  if (totalEl) totalEl.textContent = totalShown + ' roles';
+}
+
+// Initialize
+renderAlumni();
+renderExplore();
+</script>
+</body>
+</html>
